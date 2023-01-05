@@ -30,7 +30,6 @@ const embed = require('./embed');
  */
 const call = require('./commands/call');
 const usercmd = require('./commands/user');
-const secret = require('./commands/secret');
 const help = require('./commands/help');
 
 /**
@@ -93,19 +92,13 @@ client.on("message", function(message) {
       /**
        * Si l'utilisateur n'est pas déjà dans la db, alors il n'a pas de permissions et les set à null
        */
-      if(row != undefined)  perms = row.permissions;
-      else perms = null;
+     
 
       /**
        * Si l'utilisateur rentre une commande admin mais n'a pas les droits, alors un message disant qu'il n'as pas les droits est envoyé
        * Si il est admin et lance une commande Admin, alors l'éxécuter
        */
-      if(perms != ADMIN && ADMIN_CMD.includes(command)) {
-          embed(message, 'Permissions', 15158332, "You don't have the permissions to use this command. Please ask help to an admin.", user);
-      } else if(perms == ADMIN && ADMIN_CMD.includes(command)) {
-          usercmd(all);
-          call(all);
-      }
+    
 
       /**
        * Si l'utilisateur n'a pas les droits utilisateur ni admin, et lance une commande utilisateur (sauf secret et help qui sont des exceptions)
@@ -115,15 +108,4 @@ client.on("message", function(message) {
        * Si il n'est ni user ni admin mais que la commande est secret ou help, alors quand même autoriser la commande :
        * help permet d'aider n'importe qui, et secret est une fonction de sécuritée permettant de mettre admin n'importe qui grâce à un mot de passe de récupération
        */
-      if(perms != USER && USER_CMD.includes(command) && perms != ADMIN && command != 'secret' && command != 'help') {
-          embed(message, 'Permissions', 15158332, "You don't have the permissions to use this command. Please ask help to an admin.", user);
-      } else if(perms == USER || perms == ADMIN && USER_CMD.includes(command)) {
-          call(all);
-          secret(all);
-          help(all);
-      } else {
-        secret(all);
-        help(all);
-      }
-    });
-});
+      
